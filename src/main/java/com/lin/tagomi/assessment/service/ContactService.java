@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Component
 public class ContactService {
 
-    @Value("classpath:addresses.txt")
+    @Value("classpath:addresses.properties")
     private Resource res;
 
     private List<Contact> contactList;
@@ -61,19 +61,22 @@ public class ContactService {
         }
     }
 
-    public void searchFirstName(String term) {
+    public List<Contact> searchFirstName(String term) {
         Collection<Integer> matchIndices = this.searchTermInTrie(term, this.firstNameTrie);
         printResult(matchIndices);
+        return matchIndices.stream().map(x -> this.contactList.get(x)).collect(Collectors.toList());
     }
 
-    public void searchLastName(String term) {
+    public List<Contact> searchLastName(String term) {
         Collection<Integer> matchIndices = this.searchTermInTrie(term, this.lastNameTrie);
         printResult(matchIndices);
+        return matchIndices.stream().map(x -> this.contactList.get(x)).collect(Collectors.toList());
     }
 
-    public void searchPhone(Integer term) {
+    public List<Contact> searchPhone(Integer term) {
         Collection<Integer> matchIndices = this.searchPhoneInTrie(term, this.phoneTrie);
         printResult(matchIndices);
+        return matchIndices.stream().map(x -> this.contactList.get(x)).collect(Collectors.toList());
     }
 
     public Collection<Integer> searchTermInTrie(String str, GenericTrie searchTrie) {
